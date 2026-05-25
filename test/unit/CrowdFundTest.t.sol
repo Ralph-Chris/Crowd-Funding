@@ -1,18 +1,19 @@
-//SPDX-License-Identifier: MIT
+//SPDX-License-Identifier:MIT
 pragma solidity ^0.8.26;
 import {CrowdFund} from "../../src/CrowdFund.sol";
 import {DeployCrowdFund} from "../../script/DeployCrowdFund.s.sol";
 import {Test, console} from "../../lib/forge-std/src/Test.sol";
+
 contract CrowdFundTest is Test {
-     uint256 constant SENDING =10e18;
-     uint256 constant BALANCE = 50e18;
-     uint256 constant GAS_PRICE = 1;
-     event Funded (address indexed funder, uint256 amount);
+    uint256 constant SENDING = 10e18;
+    uint256 constant BALANCE = 50e18;
+    uint256 constant GAS_PRICE = 1;
+    event Funded(address indexed funder, uint256 amount);
     CrowdFund crowdFund;
 
     address USER = makeAddr("Christopher");
 
-      modifier funding() {
+    modifier funding() {
         vm.prank(USER);
         crowdFund.fund{value: SENDING}();
         _;
@@ -49,11 +50,10 @@ contract CrowdFundTest is Test {
     }
 
     function testaddressIsAddedToFunders() public funding {
-       
         address funder = crowdFund.getFunderAddress(0);
         assertEq(funder, USER);
     }
-   
+
     function testwithdrawWithoutOwner() public funding {
         vm.prank(USER);
         vm.expectRevert();
@@ -61,11 +61,10 @@ contract CrowdFundTest is Test {
     }
 
     function testWithdrawWithOwner() public {
-
         //-------Arrnage-------
         uint256 startingBalanceOfOwner = crowdFund.getOwner().balance;
         uint256 startingBalanceOfCrowdFund = address(crowdFund).balance;
-        
+
         //-------Act-------
         uint256 gasStart = gasleft();
         vm.txGasPrice(GAS_PRICE);
@@ -74,50 +73,44 @@ contract CrowdFundTest is Test {
         uint256 gasEnd = gasleft();
         uint256 gasUsed = (gasStart - gasEnd) * tx.gasprice;
         console.log(gasUsed);
-        
+
         //-------Assert-------
         uint256 endingBalanceOfOwner = crowdFund.getOwner().balance;
         uint256 endingBalanceOfContract = address(crowdFund).balance;
         assertEq(endingBalanceOfContract, 0);
         assertEq(startingBalanceOfOwner + startingBalanceOfCrowdFund, endingBalanceOfOwner);
-
     }
 
-   function testWithdrawWithMultipleFunders() public funding {
-    uint160 totalFunders = 10;
-    uint160 startingNumberOfFunders = 1;
-    for(uint160 i = startingNumberOfFunders; i < totalFunders; i++) {
-        hoax(address(i), SENDING);
-        crowdFund.fund{value: SENDING}();
+    function testWithdrawWithMultipleFunders() public funding {
+        uint160 totalFunders = 10;
+        uint160 startingNumberOfFunders = 1;
+        for (uint160 i = startingNumberOfFunders; i < totalFunders; i++) {
+            hoax(address(i), SENDING);
+            crowdFund.fund{value: SENDING}();
+        }
+
+        uint256 ownerStartingBalance = crowdFund.getOwner().balance;
+        uint256 crowdFundStartingBalance = address(crowdFund).balance;
+
+        vm.startPrank(crowdFund.getOwner());
+        crowdFund.withdraw();
+        vm.stopPrank();
+
+        uint256 ownerEndingBalance = crowdFund.getOwner().balance;
+        uint256 crowdFundEndingBalance = address(crowdFund).balance;
+
+        assert(address(crowdFund).balance == 0);
+        assert(ownerStartingBalance + crowdFundStartingBalance == crowdFund.getOwner().balance);
     }
 
-    uint256 ownerStartingBalance = crowdFund.getOwner().balance;
-    uint256 crowdFundStartingBalance = address(crowdFund).balance;
-
-    vm.startPrank(crowdFund.getOwner());
-    crowdFund.withdraw();
-    vm.stopPrank();
-
-    uint256 ownerEndingBalance = crowdFund.getOwner().balance;
-    uint256 crowdFundEndingBalance = address(crowdFund).balance;
-
-    assert(address(crowdFund).balance == 0);
-    assert(ownerStartingBalance + crowdFundStartingBalance
-     == crowdFund.getOwner().balance);
-   
-   }
-
-   function testEmitFunded() public {
-    uint160 startingIndex = 1;
-    uint160 endingIndex = 30;
-    for (uint160 k = startingIndex; k < endingIndex; k++) {
-        hoax(address(k + 1), SENDING);
-        vm.expectEmit(true, false, false, true, address(crowdFund));
-        emit Funded (address(k + 1), SENDING);
-        crowdFund.fund{value: SENDING}();
-   
+    function testEmitFunded() public {
+        uint160 startingIndex = 1;
+        uint160 endingIndex = 30;
+        for (uint160 k = startingIndex; k < endingIndex; k++) {
+            hoax(address(k + 1), SENDING);
+            vm.expectEmit(true, false, false, true, address(crowdFund));
+            emit Funded(address(k + 1), SENDING);
+            crowdFund.fund{value: SENDING}();
+        }
     }
-   
-   }
-
 }

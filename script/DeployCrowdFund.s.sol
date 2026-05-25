@@ -8,12 +8,11 @@ import {CrowdFund} from "../src/CrowdFund.sol";
 contract DeployCrowdFund is Script {
     function run() external returns (CrowdFund) {
         HelperConfig helperConfig = new HelperConfig();
-        address  networkConfig = helperConfig.activeNetworkConfig();
+        address networkConfig = helperConfig.activeNetworkConfig();
 
         vm.startBroadcast();
         CrowdFund crowdFund = new CrowdFund(networkConfig);
         vm.stopBroadcast();
         return crowdFund;
-
     }
-} 
+}

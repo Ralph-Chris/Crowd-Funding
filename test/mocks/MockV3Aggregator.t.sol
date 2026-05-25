@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-
 contract MockV3Aggregator {
     uint256 public constant version = 6;
 
@@ -28,12 +27,7 @@ contract MockV3Aggregator {
         getStartedAt[latestRound] = block.timestamp;
     }
 
-    function updateRoundData(
-        uint80 _roundId,
-        int256 _answer,
-        uint256 _startedAt,
-        uint256 _updatedAt
-    ) public {
+    function updateRoundData(uint80 _roundId, int256 _answer, uint256 _startedAt, uint256 _updatedAt) public {
         latestRound = _roundId;
         latestAnswer = _answer;
         latestTimestamp = _updatedAt;
@@ -45,33 +39,15 @@ contract MockV3Aggregator {
     function getRoundData(uint80 _roundId)
         external
         view
-        returns (
-            uint80 roundId,
-            int256 answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        )
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
     {
-        return (
-            _roundId,
-            getAnswer[_roundId],
-            getStartedAt[_roundId],
-            getTimestamp[_roundId],
-            _roundId
-        );
+        return (_roundId, getAnswer[_roundId], getStartedAt[_roundId], getTimestamp[_roundId], _roundId);
     }
 
     function latestRoundData()
         external
         view
-        returns (
-            uint80 roundId,
-            int256 answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        )
+        returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
     {
         return (
             uint80(latestRound),

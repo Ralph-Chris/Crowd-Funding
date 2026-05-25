@@ -32,7 +32,7 @@ contract HelperConfig is Script {
         }
 
         // Deploy the mocks
-        vm.startBroadcast();   
+        vm.startBroadcast();
         MockV3Aggregator mockPriceFeed = new MockV3Aggregator(DECIMALS, INITIAL_PRICE);
         vm.stopBroadcast();
 

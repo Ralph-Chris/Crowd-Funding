@@ -13,7 +13,7 @@ contract InteractionTest is Test {
     uint256 constant BALANCE = 50e18 ether;
     uint256 GAS_PRICE = 1;
 
-    function setUp () external {
+    function setUp() external {
         DeployCrowdFund deployCrowdFund = new DeployCrowdFund();
         crowdFund = deployCrowdFund.run();
         vm.deal(USER, BALANCE);
@@ -25,7 +25,6 @@ contract InteractionTest is Test {
 
         WithdrawCrowdFund withdrawCrowdFund = new WithdrawCrowdFund();
         withdrawCrowdFund.withdrawCrowdFund(address(crowdFund));
-        assert (address(crowdFund).balance == 0 );
-
+        assert(address(crowdFund).balance == 0);
     }
-} 
+}
