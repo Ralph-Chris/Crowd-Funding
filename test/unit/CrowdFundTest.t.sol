@@ -1,13 +1,12 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
-import {CrowdFund} from "../src/CrowdFund.sol";
-import {DeployCrowdFund} from "../script/DeployCrowdFund.s.sol";
-import {Test, console} from "../lib/forge-std/src/Test.sol"; 
-
+import {CrowdFund} from "../../src/CrowdFund.sol";
+import {DeployCrowdFund} from "../../script/DeployCrowdFund.s.sol";
+import {Test, console} from "../../lib/forge-std/src/Test.sol";
 contract CrowdFundTest is Test {
-     uint256 SENDING =10e18;
-     uint256 BALANCE = 50e18;
-     uint256 GAS_PRICE = 1;
+     uint256 constant SENDING =10e18;
+     uint256 constant BALANCE = 50e18;
+     uint256 constant GAS_PRICE = 1;
      event Funded (address indexed funder, uint256 amount);
     CrowdFund crowdFund;
 

@@ -2,14 +2,14 @@
 
 pragma solidity ^0.8.26;
 
-import {AggregatorV3Interface} from "lib/chainlink-brownie-contracts/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import {PriceConverter} from "./PriceConverter.sol";
 
 contract CrowdFund {
     using PriceConverter for uint256;
     //-------Errors-------
     error NotOwner();
-    error NotFunder();
+    error DidNotFund();
 
     //-------Events-------
     event Funded (address indexed funder, uint256 amount);
@@ -62,7 +62,7 @@ contract CrowdFund {
         require(address(this).balance < GOAL, "Goal has been reached, cannot refund");
         require(block.timestamp > DEADLINE, "Deadline has not been reached, cannot refund");
         if(s_addressToAmountFunded[msg.sender] == 0) {
-            revert NotFunder();
+            revert DidNotFund();
         }
         uint256 amountToRefund = s_addressToAmountFunded[msg.sender];
         s_addressToAmountFunded[msg.sender] = 0;
