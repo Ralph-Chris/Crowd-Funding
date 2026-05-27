@@ -1,2 +1,0 @@
-@chainlink/=lib/chainlink-brownie-contracts/
-@lib/=./../lib/forge-std/
