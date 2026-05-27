@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Foundry
 
 **Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
@@ -64,3 +65,7 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+=======
+# Crowd-Funding
+A Solidity smart contract Built with Foundry. The Contract allows users to send ETH, and only the contract owner would be able to withdraw funds from the contract.
+>>>>>>> 20b367d9414af7887ac247a5f420d143183a9e18
