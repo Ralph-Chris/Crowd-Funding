@@ -1,2 +1,2 @@
 # Crowd-Funding
-A Solidity smart contract that allows user fund and allows only the contract owner to withdraw Funds
+A Solidity smart contract Built with Foundry. The Contract allows users to send ETH, and only the contract owner would be able to withdraw funds from the contract.
